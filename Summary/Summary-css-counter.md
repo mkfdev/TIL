@@ -17,7 +17,7 @@ content:counter(카운터이름, style)
 
 ## 사용 예
 
-'''
+```
 ol {
     counter-reset:section;
 }
@@ -35,8 +35,9 @@ li::before{
     <li>Third Line</li>
 </ol>
 
---------[Result]--------
+
+[Result]--------------
 section 1. First Line
 section 2. First Line
 section 3. First Line
-'''
+```
