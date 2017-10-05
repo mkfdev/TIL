@@ -75,3 +75,90 @@ var 선언문이나 function 선언문을 해당 scope의 선두로 옮기는 �
 1. var 키워드로 선언된 변수는 선언 단계(Variable Object에 등록, 스코프가 VO참조)와 초기화 단계(메모리할당, undefined)가 이루어진다.
 2. 변수 선언문 이전에 변수에 접근하면 undefined가 반환된다. => 변수 호이스팅
 3. 변수 할당문에 도달하면 할당 단계가 이루어진다.
+
+---
+# 10
+# 프로토타입(Prototype)
+- 자바스크립트의 모든 객체는 자신의 부모 역할을 담당하는 객체와 연결되어 있고, 부모 객체를 프로토타입(prototype)이라고 한다. 
+- 마치 객체 지향의 상속 개념과 같이 부모 객체의 프로퍼티 또는 메소드를 상속받아 사용할 수 있다.
+
+## [[Prototype]] 프로퍼티
+- __proto__와 같은 개념이다.
+- 함수를 포함한 모든 객체가 가지고 있는 프로퍼티이다.
+- 객체의 입장에서 자신의 부모 역할을 하는 프로토타입 객체를 가리킨다.
+- 함수 객체는 `function.prototype`을 가리킨다.
+
+## prototype 프로퍼티
+- 함수 객체만 가지고 있는 프로퍼티이다.
+- 함수 객체가 생성자로 사용될 때, 생성될 객체의 부모 역할을 하는 객체(프로토타입 객체)를 가리킨다.
+
+## constructor 프로퍼티
+- 프로토타입 객체를 생성했던 함수에 대한 참조를 나타낸다.
+- constructor가 함수 또는 생성자 객체를 가리키는 참조값이므로 아래처럼 constructor 속성으로 함수를 호출하거나 객체를 생성할 수 있다.
+
+``` javascript
+function Person(name){
+    this.name = name;
+}
+
+var mySon = new Person('daniel');
+var myGrandSon = new mySon.constructor('jessica');
+
+```
+
+
+## 객체 생성 방식에 따른 프로토타입의 차이
+1. 생성자 함수 방식
+``` javascript
+function Person(name){
+    this.name = name;
+}
+var choi = new Person('choi');
+```
+- choi 객체의 [[prototype]]은 Person.prototype 이다.
+
+
+
+2. 객체 리터럴 방식
+``` javascript
+var choi = {
+    name : 'min',
+    gender: 'female',
+    year : 2017
+}
+```
+- choi 객체의 [[prototype]]은 Object.prototype 이다.
+
+
+
+3. Object() 생성자 함수 방식
+
+- 생성자 함수 정의를 하기위한 방식은 함수선언식, 함수표현식, function() 3가지 방식이 있다. 3가지 함수 정의 방식은 결국 Function() 생성자 함수를 통해 함수 객체를 생성한다. 따라서 어떠한 방식으로 함수 객체를 생성하여도 모든 함수 객체의 prototype객체는 Function.prototype이다. 
+
+``` javascript
+// 빈 객체의 생성
+var choi = new Object();
+// 프로퍼티 추가
+person.name = 'Choi';
+person.gender = 'female';
+person.sayHello = function () {
+  console.log('Hi! My name is ' + this.name);
+};
+```
+- choi 객체의 [[prototype]]은 Object.prototype 이다.
+
+
+### 3가지 방식에 따라 생성된 객체의 prototype객체 정리
+
+객체 생성 방식  | 엔진의 객체 생성 | 인스턴스의 prototype 객체
+--------- | --------- | ---------
+생성자함수 | 생성자함수 | 생성자 함수 이름.prototype
+객체리터럴 | object()생성자함수 | Object.prototype
+object() 생성자함수 | object()생성자함수 | Object.prototype
+
+- 객체리터럴, 생성자 함수는 내부적으로 Object() 생성자 함수를 사용하여 객체를 생성한다. 
+- Object() 생성자 함수는 함수 객체이기 때문에 일반 객체와 다르게 prototype 프로퍼티가 있다.
+
+
+## 프로토타입 체인(Prototype chain)
+- 해당 객체에 접근하려는 프로퍼티나 메소드가 없다면 [[Prototype]] 프로퍼티가 가리키는 링크를 따라 자신의 부모 역할을 하는 프로토타입 객체의 프로퍼티나 메소드를 차례대로 검색하는 것을 프로토타입 체인이라고 한다.
