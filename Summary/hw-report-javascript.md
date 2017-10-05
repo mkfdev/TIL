@@ -1,15 +1,29 @@
 # 자바스크립트 용어정리
-
+내장객체 DOM(프로토타입 링크)
+# 12
 # Javascript this
 1. 함수 호출 패턴
 - this는 전역 객체에 바인딩된다.
-- 전역함수, 내부함수, 메소드의 내부함수, 콜백함수
+- 전역함수, 내부함수, 메소드의 내부함수, 콜백함수 모두 전역 객체에 바인딩된다.
 
 2. 메소드 호출 패턴
-- 메소드 내부의 this는 해당 메소드를 호출한 객체에 바인딩
+- this는 해당 메소드를 호출한 객체에 바인딩된다.
+- 함수가 객체의 프로퍼티일 때, 메소드 내부의 this
+- 프로토타입 객체 메소드 내부에서 사용된 this도 일반 메소드 방식과 마찬가지로 해당 메소드를 호출한 객체에 바인딩된다.
 
+3. 생성자 호출 패턴
+- this는 새로 생성된 객체를 가리킨다.
+- new 연산자로 생성자 함수를 호출하면
+1. 빈 객체 생성 및 this 바인딩: 빈 객체를 생성후 this는 이 빈 객체를 가리킨다.
+2. this를 통한 프로퍼티 생성: 생성된 빈 객체에 this를 사용하여 동적으로 프로퍼티나 메소드를 생성한다.
+3. 생성된 객체 반환 : 반환문이 없는 경우, 새로 생성된 객체가 반환된다.
 
 ## arguments 프로퍼티
+- 함수 호출시 전달된 인수들의 정보를 담고 있는 순회가능한 유사 배열 객체(length 프로퍼티를 가진 객체)이다.
+-매개변수의 갯수보다 인수를 적게 전달했을 때 인수가 전달되지 않은 매개변수는 undefined으로 초기화된다.
+- 매개변수의 갯수보다 인수를 더 많이 전달한 경우, 초과된 인수는 무시된다.
+- 매개변수 갯수가 확정되지 않은 가변 인자 함수를 구현할 때 유용하다.
+- 배열 메소드를 사용하려면 Function.prototype.call, Function.prototype.apply를 사용해야 한다.
 
 ---
 # 4
@@ -81,6 +95,7 @@ var 선언문이나 function 선언문을 해당 scope의 선두로 옮기는 �
 # 프로토타입(Prototype)
 - 자바스크립트의 모든 객체는 자신의 부모 역할을 담당하는 객체와 연결되어 있고, 부모 객체를 프로토타입(prototype)이라고 한다. 
 - 마치 객체 지향의 상속 개념과 같이 부모 객체의 프로퍼티 또는 메소드를 상속받아 사용할 수 있다.
+- Object.prototype 객체는 프로토타입 체인의 종점이다.
 
 ## [[Prototype]] 프로퍼티
 - __proto__와 같은 개념이다.
@@ -162,3 +177,48 @@ object() 생성자함수 | object()생성자함수 | Object.prototype
 
 ## 프로토타입 체인(Prototype chain)
 - 해당 객체에 접근하려는 프로퍼티나 메소드가 없다면 [[Prototype]] 프로퍼티가 가리키는 링크를 따라 자신의 부모 역할을 하는 프로토타입 객체의 프로퍼티나 메소드를 차례대로 검색하는 것을 프로토타입 체인이라고 한다.
+
+
+## 프로토타입 객체의 확장
+- 프로토타입 객체도 객체이므로 프로퍼티를 추가,삭제할 수 있다.
+- 아래 예는 Person.prototype 객체에 메소드 sayHello를 추가하였다.
+
+``` javascript
+Person.prototype.sayHello = function(){
+  console.log('Hi~~ my name is ' + this.name);
+};
+```
+
+## 기본자료형의 확장
+- 기본자료형은 객체가 아니므로 프로퍼티나 메소드를 가질 수 없다.
+- 그러나 기본자료형으로 프로퍼티나 메소드를 호출할 때 기본자료형과 연관된 객체로 일시적으로 변환되어 프로토타입 객체를 공유하게 된다.
+- 프로퍼티나 메소드를 직접 추가할 수는 없고, String 객체의 프로토타입 객체 String.prototype에 메소드를 추가하면 메소드를 사용할 수 있다.
+- 표준 내장 객체(Built-in object)의 프로토타입 객체(String.prototype, Number.prototype, Array.prototype 등)에 개발자가 정의한 메소드의 추가를 허용한다.
+``` javascript
+var objStr = 'this is string';
+
+String.prototype.myMethod = function () {
+  return 'String prototype';
+};
+
+console.log(objStr.myMethod()); //String prototype 출력
+```
+
+## 프로토타입 객체의 변경
+- 객체를 생성할 때 프로토타입이 결정되고, 부모 객체인 프로토타입을 동적으로 변경할 수 있다.
+- 프로토타입 객체 변경 시점 이전에 생성된 객체의 constructor 속성은 해당 객체의 생성자 함수를 가르킨다.
+- 프로토타입 객체 변경 시점 이후에 생성된 객체의 constructor는 Object() 생성자 함수를 가르킨다.
+- 즉, Person(기존생성자명).prototype.constructor 프로퍼티가 삭제되고, Object.prototype.constructor 프로퍼티가 생성된다.
+
+### 프로토타입 체인 동작 조건
+- 객체의 프로퍼티를 참조하는 경우, 프로토타입 체인이 동작한다.
+``` javascript
+function Person(name) {
+  this.name = name;
+}
+Person.prototype.gender = 'male';
+var bar = new Person('Kim');
+var foo = new Person('Choi');
+foo.gender = 'female';
+```
+- 위 예제처럼 새로 생성한 객체에 gender 프로퍼티의 값을 할당하면 프로토타입 체인이 동작하지 않고, 해당 객체에 프로퍼티를 동적으로 추가한다.
