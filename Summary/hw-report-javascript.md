@@ -1,7 +1,26 @@
 # 자바스크립트 용어정리
-프로그래밍
+### 프로그래밍
 - 요구사항의 집합을 분석하여 적절한 자료구조와 함수의 집합으로 변환한 후 그 흐름을 제어하는 것이다.
-내장객체 DOM(프로토타입 링크)
+
+### 내장객체(Built-in Object) 
+- 웹페이지 등을 표현하기 위한 공통의 기능을 제공하며 웹페이지가 브라우저에 의해 로드되자마자 바로 사용이 가능하다.
+- 내장객체에는 Standard Built-in Objects(표준 빌트인 객체)와 Native Object(BOM,DOM)가 있다.
+
+### 표준 내장 객체 Standard Built-in Objects (or Global Objects)
+- 자바스크립트가 기본적으로 가지고 있는 객체들을 의미한다.
+- Javascript는 프로그램 전체의 영역에서 공통적으로 필요한 기능을 개발자 각자가 일일히 작성하는 수고를 줄이기 위해 Standard Built-in Objects(표준 빌트인 객체)를 제공한다.
+- 전역객체와는 다른 의미이며, 전역객체의 자식이다.
+- Object, Function, Array, String, Number, Math, Date 등이 있다.
+
+### BOM(Browser Object Model)
+- 브라우저 객체 모델은 현재 브라우저 창 또는 탭을 표현하는 객체이다.
+- 최상위 객체는 window로 Standard Built-in Objects가 구성된 후에 객체가 구성된다.
+-  웹 브라우저의 버튼, URL 주소 입력창, 타이틀 바, 윈도우 크기 등  을 제어할 수 있는 객체 모델이다.
+- 자식 객체로는 window, location, navigator, history, screen, document 등이 있다.
+
+### DOM(Document Object Model)
+- HTML 문서에 대한 모델을 트리로 구성하고, 문서 내의 각 요소에 접근하여 수정할 수 있도록 프로퍼티와 메소드를 재공한다.
+- 최상위 객체는 document 객체로 전체 문서를 표현한다.
 
 # 6
 # 제어문(Control Flow)
@@ -144,8 +163,45 @@ console.log(typeof b); //object
 1. 객체가 소유한 프로퍼티 값에 새로운 값을 할당하면 프로퍼티 값이 갱신된다.
 2. 객체가 소유하지 않은 프로퍼티에 값을 할당하면 해당 프로퍼티를 객체에 추가하고 값을 할당한다.
 3. delete 연산자로 객체의 프로퍼티를 삭제할 수 있다.
+---
+# 9
+# 연산자
+
+## 비교연산자( != 와 !== )
+연산자 | 설명
+--------- | ---------
+!= | 부등비교, 값이 같지 않을 경우 true
+!== | 불일치 비교, 데이터 타입이 다르거나 값이 다를 경우 true
+
+
+## 단축 평가
+- Boolean값으로 평가하기 위해 참조하여야 할 곳까지 진행한 후, 평가를 중지하게된 계기가 된 값을 반환한다.
+
+연산자 | 설명
+--------- | ---------
+true ll anything | true
+false ll anything | anything
+true && anything | anything
+false && anything | false
+
+
+## 타입 연산자
+연산자 | 설명
+--------- | ---------
+typeof | 데이터타입을 문자열로 반환한다. null과 배열은 object, 함수는 function
+instanceof | 객체가 동일 객체 타입의 인스턴스이면 true를 반환한다.
+
+
+## !! - 피연산자를 불린 값으로 변환하는 역할
+- 객체(배열 포함)의 경우, 빈객체라도 존재한다면 true로 변환된다.
+- !!를 제거한 불린 값과 동일하다.
+- console.log(!!{}); //true
+- console.log(!![]); //true
+- console.log(!!1); // true
+- console.log(!!null); // false
 
 ---
+
 # 11
 # Scope(유효범위)
 - 변수가 가지고 있는 참조범위이다.
