@@ -1,12 +1,3 @@
-### map, filter, reduce*****
-- 원본 배열이 변경되지 않는다.
-
-###  Array.prototype.some()
-= 조건에 부합하는게 하나라도 있으면 참
-
----
-
----
 # 실행 컨텍스트(Execution Context)
 - 실행 가능한 코드가 실행되는 환경이다.
 - 실행 가능한 코드 : 전역코드, Eval코드(안씀), 함수코드(호출)
@@ -122,8 +113,25 @@
 - 성능적인 면과 자원적인 면에서 손해를 볼 수 있다.
 - (실행 컨텍스트에서) 클로저로 참조하는 변수는 프로그램 종료 시까지 계속 메모리에 할당되어 있기 때문에 성능 상 좋다고 할 수 없다.(최소화하며 오남용하지 않아야 한다.)
 
----
+```
+  <button type="button" onclick="myFunction()">Count!</button>
 
-1. MD파일
-2. 복습+예습
-3. 7개 제출
+  <p id="demo">0</p>
+
+  <script>
+    var add = (function () {
+      var counter = 0;
+      return function () {
+        return ++counter;
+      };
+    }());
+
+    function myFunction() {
+      document.getElementById('demo').innerHTML = add();
+    }
+  </script>
+```
+- 전역 변수의 사용 억제를 위한 방식
+- 즉시 실행함수는 한번만 실행되므로 counter가 다시 초기화되지 않는다.
+- 외부함수의 변수 counter는 참조하는 함수(내부함수)가 소멸될때까지 유지된다.
+- counter는 외부에서 접근할 수 없는 private 변수이다.
