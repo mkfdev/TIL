@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>hover effect</title>
+  <style>
+    input {
+      width: 100px;
+    }
+  </style>
+</head>
+
+<body>
+  <input type="text" name="num1"><em>+</em>
+  <input type="text" name="num2"><em>=</em>
+  <input type="text" name="result">
+  <input type="button" value="확인">
+
+  <script>
+    //주의 : input의 value는 문자열 -> 숫자로 형변환
+    var btn = document.querySelector('input[type=button]');
+
+    //확인 버튼 클릭 이벤트
+    btn.addEventListener('click', function() {
+
+      //input 문자값 -> 숫자
+      var n1 = document.querySelector('input[name=num1]').value * 1;
+      var n2 = document.querySelector('input[name=num2]').value * 1;
+      var res = document.querySelector('input[name=result]').value * 1;
+
+      alert(n1 + n2 === res);
+    });
+  </script>
+
+</body>
+
+</html>
