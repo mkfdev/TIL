@@ -72,7 +72,7 @@ xhr.send();
 - 준비된 요청을 서버에 전달한다.
 - GET, POST 메소드에 따라 전송방식에 차이가 있다.
 - GET 메소드는 URL의 일부분인 쿼리문자열(쿼리 파라미터)로 데이터를 서버로 전송한다.
-- POST 메소드는 데이터(payload)를 Request body에 담아 전송한다.
+- POST 메소드는 데이터(payload)를 Request body에 담아 전송한다.(payload:body에 담기는 data)
 - XMLHttpRequest.send 메소드는 request body에 담아 전송할 인수를 전달 할 수 있다.
 - HTTP Request/Response Message Pair 에는 Header와 Body가 있는데, Header에는 전달하려는 요청 정보를 담는다.
 - **요청 메소드가 GET인 경우 send메소드의 인수는 무시되고 request body는 null로 설정된다.
@@ -124,13 +124,3 @@ req.onreadystatechange = function(e){
 - localhost:port
 - 웹서버마다 port를 설정해준다.
 - 가상 서버(localhost)에서 실제 서버로 보내는 것을 배포라고 한다.
-
-# CRUD
-- 기본적인 데이터 처리 기능인 Create, Read, Update, Delete를 말한다.
-
-Operator  | HTTP
---------- | --------- 
-Create    | PUT / POST
-Read | GET
-Update | PUT / POST / PATCH
-delete | DELETE
