@@ -32,7 +32,6 @@
 - HTMLCollection : HTMLElement의 리스트를 담아 반환하기 위한 객체로 유사배열(array-like object)이다.
 - IE9이상에서 동작한다.
 
-여기부터 10/18일에 정리
 ---
 
 ## innerHTML 

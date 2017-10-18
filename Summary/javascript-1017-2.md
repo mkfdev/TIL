@@ -15,8 +15,8 @@
 - 자원을 표현하는데 중점을 두어야 한다.
 - 리소스명은 동사(get)보다는 명사를 사용한다.
 - GET /books/1 (o)
-- GET /members/delete/1 (x) //delete와 같은 행위에 대한 표현이 들어가선 안된다.
-- DELETE /members/1 (o) //위의 잘못된 표현 수정
+- GET /members/delete/1 (x) - delete와 같은 행위에 대한 표현이 들어가선 안된다.
+- DELETE /members/1 (o) - 위의 잘못된 표현 수정
 
 ## 2. 자원에 대한 행위는 HTTP Method(GET,POST,PUT,DELETE 등)으로 표현한다.
 - DELETE /books/1
@@ -43,4 +43,3 @@ Resource | 자원 | HTTP URI
 Verb | 자원에 대한 행위 | HTTP Method
 Representations | 자원에 대한 행위의 내용 | HTTP Message Pay Load
 
-http://meetup.toast.com/posts/92 내일참고
