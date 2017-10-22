@@ -569,6 +569,40 @@ req.send();
 - SC(Scope Chain)
 - this(thisValue)
 
-1. 전역 컨텍스트에 접근하기 이전에 전역 객체(GO)가 생성된다.
+## Scope Chain
+- 스코프 체인은 일종의 리스트로서 중첩된 함수의 스코프의 레퍼런스를 차례대로 저장하고 있는 개념이다.
+- 함수 실행 컨텍스트일 경우 Activation Object를 선두로하여 순차적으로 상위 컨텍스트(가 있다면)의 Activation Object를 가리키며 마지막 리스트는 전역 객체를 가리킨다.
+- 함수 실행중에 변수를 만나면 그 변수를 우선 현재 Scope인 Activation Object에서 검색해보고, 만약 검색에 실패하면 스코프 체인에 담겨진 순서대로 그 검색을 이어가게 된다.
+- 스코프 체인의 순차적인 검색에 실패하면 정의되지 않은 변수에 접근하는 것으로 판단하여 Reference 에러를 발생시킨다.
+- 스코프 체인은 [[scope]] 프로퍼티로 참조할 수 있다. 
 
+
+# 전역 코드에의 진입(순서)
+
+1. 전역 컨텍스트에 접근하기 이전에 전역 객체(GO)가 생성된다.
 2. 전역 코드로 컨트롤이 진입하면 전역 실행 컨텍스트(Global EC)가 생성되고 실행 컨텍스트에 스택이 쌓인다.
+3. 스코프체인이 초기화된다.(스코프 체인의 생성과 초기화)
+4. Variable Instantiation(변수객체화)가 실행된다. -> Variable Object에 프로퍼티 값을 추가하는 것이다.
+5. this value가 결정된다.
+
+## 변수 객체화(전역)
+1. (Function Code인 경우) 매개변수가 Variable Object의 프로퍼티로, 인수가 값으로 설정된다.
+2. 함수선언을 대상으로 함수명이 Variable Object의 프로퍼티로, 생성된 객체가 값으로 설정된다.(함수 호이스팅)
+3. 변수 선언을 대상으로 변수명이 Variable Object의 프로퍼티로, undefined가 값으로 설정된다.(변수 호이스팅)
+
+## 함수 호이스팅
+- 코드가 실행되기 이전에 전역에서 선언된 함수의 함수명은 Variable Object의 프로퍼티가 되고 생성된 함수 객체(Function Object)가 값으로 설정된다. 따라서 스코프 체인이 가리키는 변수 객체에 이미 함수가 등록되어 있으므로 이후 코드를 실행할 때 함수선언식 이전에 함수를 호출할 수 있게 된다.
+
+## 변수 호이스팅
+전역에서 var 키워드로 선언된 변수는 선언 단계와 초기화 단계가 한번에 이루어진다. 즉, 스코프 체인이 가리키는 변수 객체에 변수가 등록되고 변수는 undefined로 초기화된다. 따라서 변수 선언문 이전에 변수에 접근하여도 Variable Object에 변수가 존재하기 때문에 에러가 발생하지 않고 undefined를 반환한다.
+
+## this value 결정
+- this value가 결정되기 이전에 this는 전역 객체를 가리키고 있다가 함수 호출 패턴에 의해 this에 할당되는 값이 결정된다.
+
+
+# 전역코드의 실행
+## 함수의 실행
+1. 스코프 체인의 선두에 Activation Object를 참조하도록 설정한다.
+2. Activation Object는 우선 arguments 프로퍼티의 초기화를 실행하고, 그 후 Variable Instantiation가 실행된다.
+(VO객체는 Activation Object에 바인딩하여 Variable Instantiation를 실행한다.)
+3. this value가 결정된다.
