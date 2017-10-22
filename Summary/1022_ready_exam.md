@@ -444,15 +444,131 @@ req.onreadystatechange = function(e){
       //데이터 출력
       console.log(req.responseText);
       //3가지 구체적인 출력 방식
-      //1.HTML형식 추가
+      //1.Load HTML(HTML형식 추가) -> 전송받은 데이터를 DOM에 추가한다.
+      document.getElementById('content').innerHTML = req.responseText;
+      //또는
+      document.getElementById('content').insertAdjacentHTML('beforeend',req.responseText);
 
-      //2.JSON 형식 추가
+      //2.Load JSON(JSON 형식 -> 객체화) : JSON.parse()
+      //역직렬화
+      responseObject = JSON.parse(req.responseText);
 
-      //3.객체 형식 추가(역직렬화된 데이터)
-
+      var newContent = '';
+      newContent += '<div id="tours">';
+      ...
+      for(var i=0; i < responseObject.tours.length; i++){
+        ... responseObject.tours[i].region...
+      }
+      //생략
     }else{
       console.log("Error!");
     }
   }
 }
 ```
+- readyState : response가 클라이언트에 도달했는지를 추적한다.
+- 0(UNSET) XMLHttpRequest.open() 메소드 호출 이전
+- 1(OPENED) XMLHttpReqeust.open() 메소드 호출 완료
+- 2(HEADERS_RECEIVED) XMLHttpRequst.send() 메소드 호출 완료
+- 3(LOADING) 서버응답중(XMLHttpRequest.responseText 미완성 상태)
+- 4(DONE) 서버응답완료(정상적으로 response가 돌아온 상태)
+
+
+# Load JSONP 와 동일출처원칙
+- 요청에 의해 웹페이지가 전달된 서버와 동일한 도메인의 서버로 부터 전달된 데이터는 문제없이 처리할 수 있다. 그러나 보안상의 이유로 다른 도메인으로의 요청은 제한된다.
+- 동일출처원칙을 우회하는 방법
+
+1. 웹서버의 프록시 파일 서버에 원격 서버로부터 데이터를 수집하는 별도의 기능을 추가하는 것이다. 이를 프록시(Proxy)라 한다.
+
+2. JSONP script 태그의 원본 주소에 대한 제약이 존재하지 않는데 이것을 이용하여 다른 도메인의 서버에서 데이터를 수집하는 방법이다. 자신의 서버에 함수를 정의하고 다른 도메인의 서버에 얻고자 하는 데이터를 인수로 하는 함수 호출문을 로드하는 것이다.
+
+3. Cross-Origin Resource Sharing HTTP 헤더에 추가적으로 정보를 추가하여 브라우저와 서버가 서로 통신해야 한다는 사실을 알게하는 방법이다.
+
+# REST API
+- REST는 HTTP 1.0/1.1의 스펙 작성에 참여했다.
+- 로이필딩의 논문에서 웹이 HTTP의 설계상 우수성을 제대로 사용하지 못하는 상황을 보고 웹의 장점을 최대한 활용할 수 있는 아키텍쳐로 REST를 소개했다.
+- *HTTP 프로토콜을 의도에 맞게 디자인하도록 유도하고 있다.
+
+## RESTful이란?
+- REST의 기본 원칙을 성실히 지킨 서비스 디자인을 RESTful이라 한다.
+
+## REST API의 중심규칙
+1. URI는 정보의 자원을 표현해야 한다.
+2. 자원에 대한 행위는 HTTP Method로 표현한다.
+
+### HTTP Method
+- 4가지의 Method를 사용하여 CRUD를 구현한다.
+
+Action  | Method | 역할
+--------- | --------- | ---------
+Create    | POST | 리소스를 생성
+Read - index/retrieve | GET | 모든/특정 리소스를 조회
+Update | PUT | 리소스를 갱신
+delete | DELETE | 리소스를 삭제
+
+
+### REST API의 구성
+- REST API는 자원(Resource),행위(Verb),표현(Representations)의 3가지 요소로 구성된다.
+- REST는 자체 표현 구조(Self-descriptiveness)로 구성되어 REST API만으로 요청을 이해할 수 있다
+
+구성요소  | 내용 | 표현 방법
+---------| --------- | ---------
+Resource | 자원 | HTTP URI
+Verb | 자원에 대한 행위 | HTTP Method
+Representations | 자원에 대한 행위의 내용 | HTTP Message Pay Load
+*pay Load(페이로드) - body에 담기는 데이터
+
+## GET
+``` javascript
+var req = new XMLHttpRequest();
+req.open('GET', 'http://localhost:5000/books');
+req.send();
+*정상 : req.status === 200
+```
+
+## POST
+``` javascript
+var req = new XMLHttpRequest();
+req.open('POST', 'http://localhost:5000/books');
+req.setRequestHeader('Content-type', 'application/json');
+
+req.send(JSON.stringify({
+  title : "ES6",
+  author : "Choi"
+}));
+
+*정상 : req.status === 201
+```
+
+## PUT
+``` javascript
+var req = new XMLHttpRequest();
+req.open('PUT', 'http://localhost:5000/books/4');
+req.setRequestHeader('Content-type', 'application/json');
+
+req.send(JSON.stringify({
+  title : "javascript",
+  author : "Kim"
+}));
+```
+
+## DELETE
+``` javascript
+var req = new XMLHttpRequest();
+req.open('DELETE', 'http://localhost:5000/books/4');
+req.send();
+```
+- POST, PUT은 setRequetHeader를 지정해준다.
+
+# 실행 컨텍스트
+- 실행 컨텍스트는 실행 가능한 코드(전역코드와 함수 내 코드)가 실행되는 환경이다.
+- 자바스크립트 엔진은 코드를 실행하기 위해 변수, 함수선언, 변수의 유효범위, this의 정보를 알고 있어야 한다.
+
+# 실행 컨텍스트의 3가지 객체
+- VO(Variable Object)
+- SC(Scope Chain)
+- this(thisValue)
+
+1. 전역 컨텍스트에 접근하기 이전에 전역 객체(GO)가 생성된다.
+
+2. 전역 코드로 컨트롤이 진입하면 전역 실행 컨텍스트(Global EC)가 생성되고 실행 컨텍스트에 스택이 쌓인다.
