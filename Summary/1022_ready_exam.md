@@ -259,5 +259,200 @@ var obj = {
 - decodeURI(), decodeURIComponent() 인코딩된 완전한 URI, 인코딩된 URI Component를 원래의 URI로 돌려놓는다.
 
 
+---
+# DOM
+## DOM tree의 구성
+- 문서노드(Document Node) - DOM tree에 접근하기 위한 시작점
+- 요소노드(Element Node)
+- 어트리뷰트노드(Attribute Node)
+- 텍스트노드(Text Node) - DOM tree의 최종점
+
+## 요소에의 접근
+### document.getElementsByClassName(class)
+- 메소드 반환값은 HTMLCollection이다.
+- HTMLElement의 리스트를 담아 반환하기 위한 객체로 유사배열이다.
+- 실시간으로 Node의 상태 변경을 반영한다.(live HTMLCollection)
+- querySelectorAll 메소드를 사용하여 NodeList(none-live)를 반환하게 한다.
+- 반복문을 역방향으로 돌린다.
+- HTMLCollection을 배열로 변경한다.
+- var arr = [].slice.call(elems); elems(getElementsByClassName)은 배열이 아니기 때문에 배열로 변환해준다.
+
+## DOM 탐색
+- hasChildNodes() : 자식노드가 있는지 확인하고 Boolean값 반환
+- childNodes : 자식노드의 컬렉션을 반환한다. NodeList(non-live)
+- firstChild, lastChild, previousSibling, nextSibling
+
+## 조작
+### 텍스트 노드에 접근/수정
+- nodeValue 텍스트 노드의 프로퍼티
+- 텍스트 노드일 경우 문자열 반환, 요소 노드일 경우 null 반환
+- nodeName, nodeType (노드의 정보 취득)
+
+### 어트리뷰트 노드에 접근/수정
+- className, id
+- hasAttribute(attribute) : 지정한 어트리뷰트를 가지고 있는지(Boolean)
+- getAttribute(attribute) : 어트리뷰트의 값을 취득한다. 문자열을 반환한다.
+- setAttribute(attribute, value) : 어트리뷰트와 어트리뷰트 값을 설정한다.
+- removeAttribute(attribute) : 지정한 어트리뷰트를 제거한다.
+
+### HTML 콘텐츠 조작
+- textContent : 요소의 텍스트 콘텐츠 취득 또는 변경. 마크업을 포함시키면 문자열로 인식하여 그대로 출력한다.
+- innerText: 비표준. visibility:hidden(영역을 유지) 지정되어있으면 텍스트가 반환되지 않는다. css를 고려하기 때문에 textContent 프로퍼티보다 느리다.
+- innerHTML : 해당 요소의 모든 자식요소를 포함하는 모든 콘텐츠를 하나의 문자열로 취득할 수 있다. 이 문자열은 마크업을 포함한다.
+- 그러나 마크업이 포함된 콘텐츠를 추가하는 것은 크로스 스크립팅 공격(XSS)에 취약하다.
 
 
+### DOM 조작 방식
+- innerHTML을 사용하지 않고 새로운 컨텐츠를 추가할 수 있는 방법은 DOM을 직접 조작하는 것이다.
+- createElement(tagName)
+- createTextNode(text)
+- appendChild(Node) : 생성된 노드를 DOM tree에 저장한다.
+- removeChild(Node)
+- insertAdjacentHTML(position, string) : 삽입위치, 삽입할요소
+beforebegin, afterbegin, beforeend, afterend
+- innerHTML과 inssertAdjacentHTML()은 크로스 스크립팅 공격(XSS)에 취약하다.
+- 텍스트를 추가 또는 변경시에는 textContent, 새로운 요소 추가/삭제는 DOM 조작 방식을 사용한다.
+- DOM조작 방식의 단점은 innerHTML 보다 느리고 특정노드 한개를 추가할 때 사용하므로 여러 노드를 추가하려면 많은 코드가 필요하다.
+
+
+### Event Flow(이벤트 흐름)
+- 이벤트 핸들러 : 요소에 어떤 이벤트가 일어날때(이벤트발생) 실행되는 함수.
+- 버블링 : 자식 요소에서 발생한 이벤트가 부모 요소로 전파되는 것
+- 캡처링 : 자식 요소에서 발생한 이벤트가 부모 요소부터 시작하여 이벤트를 발생시킨 자식 요소까지 도달하는 것
+- 이벤트가 발생했을 때 캡처링과 버블링은 순차적으로 발생한다.
+- 3번째 매개변수가 true면 capturing, false면 bubbling, 미설정하면 bubbling
+
+
+# 클로저
+- 내부함수가 참조하는 외부함수의 지역변수가 외부함수에 의해 내부함수가 반환된 이후에도 life-cycle이 유지되는 것.
+- 자유변수에 엮여있는 함수.
+
+``` javascript
+function outer(){
+  var x = 'Hello'; //자유 변수
+  var inner = function(){console.log(x);};
+  return inner;
+}
+
+var result = outer();
+result();
+```
+- 실행컨텍스트 관점에서, 내부함수가 유효한 상태에서 외부함수가 종료되어 외부함수의 실행 컨텍스트가 반환되어도 외부함수의 실행 컨텍스트 내의 AO(Activation object)는 유효하여 내부함수가 스코프 체인을 통해 참조할 수 있는 것을 의미한다.
+- 전역 변수 사용 억제를 위해 사용한다.
+
+## 클로저 활용 - for문 전역변수i
+``` javascript
+
+var arr = [];
+for(var i=0; i<5; i++){
+  arr[i] = (function(id){
+    return function(){
+      return id;
+    };
+  }(i));
+}
+
+for(var j=0;j<arr.length;j++){
+  console.log(arr[j]());
+}
+```
+- 즉시실행함수는 한번만 실행된다.
+- 즉시실행함수는 i를 인자로 받고 매개변수 id를 할당한 후, 내부함수를 반환하고 life-cycle이 종료된다.
+- 매개변수 id는 자유변수이다.
+
+``` javascript
+var add = (function(){
+  var counter = 0;
+  return function(){
+    return ++counter;
+  }
+}()); 
+// 즉시실행함수는 한번만 실행된다. 
+// counter는 한번만 초기화된다.
+
+function myFunction(){
+  document.getElementById('demo').innerHTML = add();
+}
+```
+- counter는 자유변수이고, 외부에서 직접 접근할 수 없는 private 변수이다. 
+- counter는 자신을 참조하는 함수가 소멸될때까지 유지된다.
+
+# 비동기식 처리 모델
+- 비동기식 처리 모델은 병렬적으로 작업을 수행한다.
+- 서버에 데이터를 요청한 이후 서버로부터 데이터가 응답될때까지 대기하지 않고(Non-blocking) 즉시 다음 작업을 수행한다.
+- 호출되는 함수는 Call Stack에 쌓이고, setTimeout이 호출되면 즉시 실행되지 않고 지정 대기 시간만큼 기다리다가 'tick' 이벤트가 발생하면 이벤트 큐로 이동한 후 Call Stack이 비어졌을 때 Call Stack으로 이동되어 실행된다.
+
+# Ajax(Asynchronous JavaScript and XML)
+- 자바스크립트를 이용해서 비동기적으로 서버와 브라우저가 데이터를 교환할 수 있는 통식 방식
+- 서버로부터 웹페지가 반환되면 화면 전체를 갱신해야 하는데 페이지 전체를 로드하여 렌더링하지 않고 갱신이 필요한 일부만 로드 후 갱신하여 동일한 효과를 볼 수 있도록 하는 것이다.
+
+## 객체를 JSON형식의 문자열로 변환
+- 큰따옴표 사용
+- JSON.stringify(o) : o는 JSON으로 변환할 객체
+- JSON.stringify(o, 필터함수, 공백의수)
+
+## JSON형식의 문자열을 객체로 변환(=역직렬화)
+- JSON.parse(str) : str은 JSON 형식의 문자열, 문자열
+
+# Ajax request
+``` javascript
+var xhr = new XMLHttpRequest();
+xhr.open('GEN','/users'); //세번째인수 default:True(비동기)
+xhr.send();
+```
+1. XMLHttpRequest객체 생성(Ajax 요청을 생성하고 전송한다)
+2. 비동기 방식으로 Request를 오픈한다.
+3. Request를 전송한다.
+
+### xhr.open(method, url, async)
+- method : HTTP method(GET,POST,PUT,DELETE)
+- url 요청을 보낼 url
+- async 비동기조작여부, default:true
+
+### xhr.send()
+- 메소드로 준비된 요청을 서버에 전달한다.
+
+1. GET 메소드 : URL의 일부분인 쿼리문자열로 데이터를 서버로 전송한다. send 메소드의 인수는 무시되고 request body는 null로 설정된다.
+
+2. POST 메소드 : 데이터(페이로드)를 Request Body에 담아 전송한다.
+
+### xhr.setRequestHeader
+- HTTP Request Header의 값을 설정한다.
+- 반드시 open 메소드 뒤에서 호출한다
+- Accept 헤더를 설정하지 않으면 send가 호출될 때 Accept 헤더가 */*로 전송된다.
+
+1. content-type 
+- request body에 담아 전송할 데이터의 MIME-type의 정보를 표현한다.
+- ex) xhr.setRequestHeader('Content-type','application/json'); // 서버가 전송할 데이터의 MIME-type 지정-json
+- ex) xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded'); //key=value&key=value..의 형태로 전송한다.
+
+2. Accept
+- HTTP 클라이언트가 서버에 요청할 때 서버가 센드백할 데이터의 MIME-type을 지정한다.
+
+# Ajax response
+``` javascript
+var req = new XMLHttpRequest();
+req.open('GET','data/test.json');
+req.send();
+
+req.onreadystatechange = function(e){
+  //readyState:4 -> DONE
+  if(req.readyState === XMLHttpRequest.DONE){
+    // status는 response 상태 코드를 반환.
+    // 200이 정상응답(GET)
+    if(req.status === 200){
+      //데이터 출력
+      console.log(req.responseText);
+      //3가지 구체적인 출력 방식
+      //1.HTML형식 추가
+
+      //2.JSON 형식 추가
+
+      //3.객체 형식 추가(역직렬화된 데이터)
+
+    }else{
+      console.log("Error!");
+    }
+  }
+}
+```
