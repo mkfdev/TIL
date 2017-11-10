@@ -1,4 +1,5 @@
 ## Angular 형식
+```
 import {...} from '@angular/core';
 //데코레이터
 @Complate({
@@ -9,6 +10,7 @@ import {...} from '@angular/core';
 export class AppComponent{
     name:String; //template과 연동
 }
+```
 
 
 ## Angular에서 뷰(템플릿) 변경 
@@ -32,8 +34,9 @@ export class AppComponent{
 
 
 ## 인터폴레이션
-- 문법 : 	{{ expression }}
-- 표현식을 쓸 수 없다.
+- 단방향 바인딩에 사용되는 템플릿 문법이다.
+- 문법 : {{ expression }}
+- 표현식의 평가 결과를 문자열로 변환하여 템플릿에 바인딩한다.
 
 
 ## 프로퍼티 바인딩***
@@ -47,7 +50,7 @@ DOM객체내의 class 프로퍼티가 없고, classList 프로퍼티로 변환�
 - <input type="text" [value]="name"> // []를 떼면 어트리뷰트.
 - 컴파일되면 name 값을 프로퍼티 바인딩한다.
 - 이외에도 많은 경우가 있으므로 어트리뷰트와 프로퍼티를 구별해서 사용해야 한다.
-
+- 이벤트 바인딩, 클래스 바인딩, 어트리뷰트 바인딩, 스타일 바인딩, 양방향 데이터 바인딩 등이 있다.
 
 ## 프로퍼티 바인딩 예제(DOM 객체로 변환)
 1) [value] 프로퍼티
@@ -75,12 +78,6 @@ DOM객체내의 class 프로퍼티가 없고, classList 프로퍼티로 변환�
 - <td [colspan]="length">A + B</td>
 - colpspan은 프로퍼티가 존재하지 않으므로 [attr.colspan] 을 사용한다.
 
-
-## 클래스 바인딩
-- 두 가지 정리
-
-
-## 스타일 바인딩
 
 
 ## 이벤트 바인딩**
@@ -113,19 +110,19 @@ DOM객체내의 class 프로퍼티가 없고, classList 프로퍼티로 변환�
 - 템플릿과 컴포넌트 클래스 사이에서 양방향 데이터 바인딩을 한다.
 - <input type="text" [(ngModel)]="name">
 - 꼭~~ 필요할 때만 쓴다. 
-- () :이벤트 바인딩 []: 프로퍼티 바인딩
+- () :이벤트 바인딩 []: 프로퍼티 바인딩 => 양방향 바인딩의 실제 동작은 이벤트 바인딩과 프로퍼티 바인딩의 조합으로 이루어진다.
 
 
 # 빌트인 디렉티브
 - 디렉티브 : DOM의 모든것을 관리하기 위한 지시
-- <div textBlue></div> textBlue는 div의 어트리뷰트
+- 컴포넌트 디렉티브, 어트리뷰트 디렉티브, 구조 디렉티브
 
 
 ## ngIf
 - 요소를 보이기/숨기기를 쉽게 할 수 있다.
 - display:none 은 표시만 안했을뿐 DOM에 남아있는다.
 - ngIf로 감추면 DOM에서도 사라진다. 
-- 사용법 : <p *ngIf="isShow"><p>
+- 사용법 : <p *ngIf = "isShow"><p>
 
 
 ## NgFor
