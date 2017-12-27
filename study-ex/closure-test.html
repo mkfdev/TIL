@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>클로저를 사용한 Counting</title>
+</head>
+<body>
+    <p>클로저를 사용한 카운팅</p>
+    <p>전역변수 counter를 위해 익명함수 사용</p>
+    
+    <button type="button" onclick="myFunction()">Count!</button>
+    <p id="demo">0</p>
+
+    <script>
+        var add = (function(){
+            var counter = 0;
+            return function(){
+                return ++counter;
+            };
+        }());
+
+        function myFunction(){
+            document.getElementById('demo').innerHTML = add();
+        }
+    </script>
+
+    <!-- 즉시 실행함수 : 한번만 실행, 즉 counter는 한번만 초기화.
+        내부함수는 외부함수의 counter에 접근할 수 있고
+        counter는 자신을 참조하는 함수가 소멸될 때까지 유지된다(클로저)
+    -->
+</body>
+</html>

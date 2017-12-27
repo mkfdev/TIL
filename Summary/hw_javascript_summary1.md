@@ -22,7 +22,7 @@
 - 변경 불가능한 값(immutable value)
 - pass-by-value
 
-## 객체형
+## 객체형                                                           
 - object
 
 ## 객체형 특징

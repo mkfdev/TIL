@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>setTimeout 콜백함수와 클로저</title>
+</head>
+<body>
+    <p>새로고침으로 다시 실행하면..</p>
+    
+    <script>
+        var fade = function(node){
+            var level = 1;
+            //내부함수 step이 외부함수 fade보다 오래 유지되기 때문에
+            //클로저의 특성대로 외부함수 fade도 소멸되지 않는다.
+            //내부함수가 외부함수에 있는 변수 leve의 실제 변수에 접근한다.
+            var step = function(){
+                var hex = level.toString(16);
+
+                node.style.backgroundColor = '#ff'+ hex;
+
+                if(level<15){
+                    level += 1;
+                    setTimeout(step, 100);
+                }
+            };
+
+            setTimeout(step, 100);
+        };
+
+        fade(document.body);
+    </script>
+</body>
+</html>
